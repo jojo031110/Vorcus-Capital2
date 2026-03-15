@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORCUS Capital | Financial Education & Strategic Investment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        vorcus: {
+                            black: '#0B0B0B',
+                            dark: '#1A1A1A',
+                            gold: '#C8A45A',
+                            goldHover: '#D4B46A',
+                            text: '#FFFFFF',
+                            muted: '#A1A1A1'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0B0B0B;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0B0B; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C8A45A; 
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(to right, #C8A45A, #E6C985, #C8A45A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -5px rgba(200, 164, 90, 0.15);
+            border-color: #C8A45A;
+        }
+
+        .reveal-text {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .chart-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease-out forwards;
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-vorcus-gold selection:text-vorcus-black">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
+        <div class="absolute inset-0 bg-vorcus-black/80 backdrop-blur-md border-b border-white/5"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                    <span class="font-serif text-2xl tracking-widest text-white group-hover:text-vorcus-gold transition-colors">VORCUS</span>
+                    <span class="font-serif text-xs tracking-[0.3em] text-vorcus-gold block -mt-1">CAPITAL</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#about" class="hover:text-vorcus-gold px-3 py-2 rounded-md text-sm font-medium transition-colors tracking-wide">About</a>
+                        <a href="#programs" class="hover:text-vorcus-gold px-3 py-2 rounded-md text-sm font-medium transition-colors tracking-wide">Programs</a>
+                        <a href="#research" class="hover:text-vorcus-gold px-3 py-2 rounded-md text-sm font-medium transition-colors tracking-wide">Research</a>
+                        <a href="#community" class="hover:text-vorcus-gold px-3 py-2 rounded-md text-sm font-medium transition-colors tracking-wide">Community</a>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="hidden md:block">
+                    <a href="#contact" class="border border-vorcus-gold text-vorcus-gold hover:bg-vorcus-gold hover:text-vorcus-black px-6 py-2 rounded-sm text-sm font-medium transition-all duration-300 tracking-widest uppercase">
+                        Join Now
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-vorcus-black border-b border-vorcus-gold/20" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#about" class="text-gray-300 hover:text-vorcus-gold block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#programs" class="text-gray-300 hover:text-vorcus-gold block px-3 py-2 rounded-md text-base font-medium">Programs</a>
+                <a href="#research" class="text-gray-300 hover:text-vorcus-gold block px-3 py-2 rounded-md text-base font-medium">Research</a>
+                <a href="#community" class="text-gray-300 hover:text-vorcus-gold block px-3 py-2 rounded-md text-base font-medium">Community</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background Chart Animation -->
+        <div class="absolute inset-0 opacity-20 pointer-events-none">
+            <svg class="w-full h-full" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+                <path d="M0,800 C300,700 500,900 800,600 C1100,300 1300,500 1600,400 C1800,350 1920,450 1920,450" 
+                      stroke="#C8A45A" stroke-width="2" fill="none" class="chart-line"/>
+                <path d="M0,850 C400,750 600,950 900,650 C1200,350 1400,550 1700,450 C1900,400 1920,500 1920,500" 
+                      stroke="#C8A45A" stroke-width="1" fill="none" class="chart-line" style="animation-delay: 0.5s"/>
+                <path d="M0,600 C200,500 400,700 700,500 C1000,300 1200,400 1500,300 C1700,250 1920,350 1920,350" 
+                      stroke="#C8A45A" stroke-width="1" fill="none" class="chart-line" style="animation-delay: 1s"/>
+            </svg>
+        </div>
+
+        <!-- Overlay Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-b from-vorcus-black/50 via-transparent to-vorcus-black pointer-events-none"></div>
+
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+            <div class="mb-6 inline-block">
+                <span class="py-1 px-3 border border-vorcus-gold/30 rounded-full text-vorcus-gold text-xs tracking-[0.2em] uppercase bg-vorcus-gold/5 backdrop-blur-sm">
+                    Est. 2024
+                </span>
+            </div>
+            <h1 class="font-serif text-6xl md:text-8xl lg:text-9xl font-medium tracking-tight mb-6 reveal-text">
+                VORCUS
+            </h1>
+            <h2 class="font-serif text-2xl md:text-4xl text-vorcus-gold tracking-[0.2em] uppercase mb-8">
+                Capital
+            </h2>
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 font-light tracking-wide leading-relaxed">
+                Financial Education & Strategic Investment Insight for the Modern Elite Investor.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <a href="#programs" class="group relative px-8 py-4 bg-vorcus-gold text-vorcus-black font-medium tracking-widest uppercase overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(200,164,90,0.4)]">
+                    <span class="relative z-10">Explore Programs</span>
+                    <div class="absolute inset-0 h-full w-full scale-0 rounded-sm transition-all duration-300 group-hover:scale-100 group-hover:bg-white/20"></div>
+                </a>
+                <a href="#contact" class="px-8 py-4 border border-white/20 text-white hover:border-vorcus-gold hover:text-vorcus-gold transition-all duration-300 tracking-widest uppercase text-sm">
+                    Join VORCUS
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="text-vorcus-gold w-6 h-6"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-vorcus-black relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="gsap-fade-right">
+                    <h3 class="text-vorcus-gold tracking-[0.2em] uppercase text-sm font-bold mb-4">About Us</h3>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-8 leading-tight">Forging Disciplined Investors in a Chaotic Market.</h2>
+                    <div class="space-y-6 text-gray-400 font-light text-lg leading-relaxed">
+                        <p>
+                            VORCUS Capital is not a brokerage. We are an intellectual fortress for those seeking to master the art and science of capital allocation.
+                        </p>
+                        <p>
+                            In an era of noise, we provide signal. Our curriculum is engineered to strip away emotion, replacing it with rigorous analysis, strategic foresight, and unwavering discipline.
+                        </p>
+                        <p>
+                            We cater to the individual who views investing not as gambling, but as a craft to be honed over a lifetime.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-10 grid grid-cols-3 gap-8 border-t border-white/10 pt-8">
+                        <div>
+                            <div class="font-serif text-3xl text-vorcus-gold mb-1">500+</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider">Active Members</div>
+                        </div>
+                        <div>
+                            <div class="font-serif text-3xl text-vorcus-gold mb-1">$50M+</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider">Assets Managed by Alumni</div>
+                        </div>
+                        <div>
+                            <div class="font-serif text-3xl text-vorcus-gold mb-1">98%</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider">Satisfaction Rate</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative gsap-fade-left">
+                    <div class="absolute -inset-4 bg-vorcus-gold/20 blur-3xl rounded-full opacity-20"></div>
+                    <img src="https://images.unsplash.com/photo-1611974765270-ca1258634369?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Trading Desk" 
+                         class="relative rounded-sm grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl border border-white/5">
+                    <div class="absolute -bottom-6 -right-6 bg-vorcus-dark p-6 border border-vorcus-gold/20 shadow-xl max-w-xs hidden md:block">
+                        <p class="font-serif text-vorcus-gold text-lg italic">"The market is a device for transferring money from the impatient to the patient."</p>
+                        <p class="text-right text-sm text-gray-500 mt-2">— Warren Buffett</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Programs Section -->
+    <section id="programs" class="py-24 bg-vorcus-dark relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-vorcus-gold/5 to-transparent pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h3 class="text-vorcus-gold tracking-[0.2em] uppercase text-sm font-bold mb-4">Curriculum</h3>
+                <h2 class="font-serif text-4xl md:text-5xl mb-6">Structured Learning Paths</h2>
+                <p class="text-gray-400 font-light">Choose your level of commitment. From foundational principles to institutional-grade strategies.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Basic -->
+                <div class="bg-vorcus-black border border-white/5 p-8 rounded-sm card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gray-700 group-hover:bg-vorcus-gold transition-colors duration-300"></div>
+                    <div class="mb-6">
+                        <i data-lucide="trending-up" class="w-10 h-10 text-gray-500 group-hover:text-vorcus-gold transition-colors"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">Basic Program</h3>
+                    <p class="text-vorcus-gold text-sm uppercase tracking-wider mb-6">Foundation</p>
+                    <ul class="space-y-4 mb-8 text-gray-400 text-sm">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Fundamental Investing</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Market Structure</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Basic Technical Analysis</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Economic Indicators</li>
+                    </ul>
+                    <div class="pt-6 border-t border-white/5">
+                        <span class="text-2xl font-serif">$299</span>
+                        <span class="text-gray-500 text-sm">/one-time</span>
+                    </div>
+                </div>
+
+                <!-- Pro -->
+                <div class="bg-vorcus-black border border-vorcus-gold/30 p-8 rounded-sm card-hover group relative overflow-hidden transform md:-translate-y-4 shadow-[0_0_30px_rgba(200,164,90,0.1)]">
+                    <div class="absolute top-0 right-0 bg-vorcus-gold text-vorcus-black text-xs font-bold px-3 py-1 uppercase tracking-wider">Recommended</div>
+                    <div class="absolute top-0 left-0 w-full h-1 bg-vorcus-gold"></div>
+                    <div class="mb-6">
+                        <i data-lucide="crown" class="w-10 h-10 text-vorcus-gold"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">Pro Program</h3>
+                    <p class="text-vorcus-gold text-sm uppercase tracking-wider mb-6">Advanced Strategy</p>
+                    <ul class="space-y-4 mb-8 text-gray-400 text-sm">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Advanced Technical Analysis</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Risk Management Systems</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Portfolio Strategy</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Options Basics</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Weekly Live Q&A</li>
+                    </ul>
+                    <div class="pt-6 border-t border-white/5">
+                        <span class="text-2xl font-serif text-gold-gradient">$899</span>
+                        <span class="text-gray-500 text-sm">/one-time</span>
+                    </div>
+                </div>
+
+                <!-- Elite -->
+                <div class="bg-vorcus-black border border-white/5 p-8 rounded-sm card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gray-700 group-hover:bg-vorcus-gold transition-colors duration-300"></div>
+                    <div class="mb-6">
+                        <i data-lucide="gem" class="w-10 h-10 text-gray-500 group-hover:text-vorcus-gold transition-colors"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl mb-2">Elite Program</h3>
+                    <p class="text-vorcus-gold text-sm uppercase tracking-wider mb-6">Professional Mastery</p>
+                    <ul class="space-y-4 mb-8 text-gray-400 text-sm">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Institutional Strategies</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Market Psychology</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Exclusive Research Access</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> Private Discord Community</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-3 text-vorcus-gold"></i> 1-on-1 Mentorship</li>
+                    </ul>
+                    <div class="pt-6 border-t border-white/5">
+                        <span class="text-2xl font-serif">$2,499</span>
+                        <span class="text-gray-500 text-sm">/one-time</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research & Insights -->
+    <section id="research" class="py-24 bg-vorcus-black">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16">
+                <div>
+                    <h3 class="text-vorcus-gold tracking-[0.2em] uppercase text-sm font-bold mb-4">Intelligence</h3>
+                    <h2 class="font-serif text-4xl md:text-5xl">Research & Insights</h2>
+                </div>
+                <a href="#" class="hidden md:flex items-center text-vorcus-gold hover:text-white transition-colors mt-4 md:mt-0">
+                    View Archive <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Article 1 -->
+                <article class="group cursor-pointer">
+                    <div class="overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 bg-vorcus-gold/20 opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1611974765270-ca1258634369?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Market Analysis" 
+                             class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="flex items-center text-xs text-vorcus-gold mb-3 uppercase tracking-wider">
+                        <span>Market Analysis</span>
+                        <span class="mx-2">•</span>
+                        <span>Oct 24, 2023</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3 group-hover:text-vorcus-gold transition-colors">The Shift in Global Liquidity Cycles</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Analyzing the correlation between central bank balance sheets and emerging market performance.</p>
+                    <span class="text-xs text-white border-b border-vorcus-gold pb-1">Read Report</span>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="group cursor-pointer">
+                    <div class="overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 bg-vorcus-gold/20 opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Crypto" 
+                             class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="flex items-center text-xs text-vorcus-gold mb-3 uppercase tracking-wider">
+                        <span>Crypto</span>
+                        <span class="mx-2">•</span>
+                        <span>Oct 18, 2023</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3 group-hover:text-vorcus-gold transition-colors">Bitcoin Halving: Historical Precedents</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A quantitative look at supply shock mechanics and miner capitulation cycles.</p>
+                    <span class="text-xs text-white border-b border-vorcus-gold pb-1">Read Report</span>
+                </article>
+
+                <!-- Article 3 -->
+                <article class="group cursor-pointer">
+                    <div class="overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 bg-vorcus-gold/20 opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Stocks" 
+                             class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="flex items-center text-xs text-vorcus-gold mb-3 uppercase tracking-wider">
+                        <span>Equities</span>
+                        <span class="mx-2">•</span>
+                        <span>Oct 12, 2023</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3 group-hover:text-vorcus-gold transition-colors">Value Investing in Tech: A Contrarian Approach</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Identifying cash-flow positive tech giants trading below intrinsic value.</p>
+                    <span class="text-xs text-white border-b border-vorcus-gold pb-1">Read Report</span>
+                </article>
+            </div>
+            
+            <div class="mt-12 text-center md:hidden">
+                <a href="#" class="inline-flex items-center text-vorcus-gold hover:text-white transition-colors">
+                    View Archive <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section id="community" class="py-24 bg-vorcus-dark relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="bg-vorcus-black border border-white/10 p-8 md:p-16 rounded-sm relative overflow-hidden">
+                <!-- Background Pattern -->
+                <div class="absolute top-0 right-0 opacity-5 transform translate-x-1/3 -translate-y-1/4">
+                    <i data-lucide="message-circle" class="w-96 h-96"></i>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+                    <div>
+                        <h3 class="text-vorcus-gold tracking-[0.2em] uppercase text-sm font-bold mb-4">The Network</h3>
+                        <h2 class="font-serif text-4xl md:text-5xl mb-6">Join the Private Circle</h2>
+                        <p class="text-gray-400 text-lg mb-8 font-light">
+                            Investing is a solitary game, but learning doesn't have to be. Join a curated community of analysts, fund managers, and dedicated retail investors.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-12 h-12 bg-vorcus-gold/10 rounded-full flex items-center justify-center border border-vorcus-gold/20">
+                                    <i data-lucide="users" class="text-vorcus-gold w-5 h-5"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="text-white font-medium mb-1">Elite Discord Access</h4>
+                                    <p class="text-sm text-gray-500">Real-time trade ideas, market chatter, and direct access to mentors.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-12 h-12 bg-vorcus-gold/10 rounded-full flex items-center justify-center border border-vorcus-gold/20">
+                                    <i data-lucide="video" class="text-vorcus-gold w-5 h-5"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="text-white font-medium mb-1">Weekly Live Streams</h4>
+                                    <p class="text-sm text-gray-500">Portfolio reviews, market breakdowns, and Q&A sessions.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-12 h-12 bg-vorcus-gold/10 rounded-full flex items-center justify-center border border-vorcus-gold/20">
+                                    <i data-lucide="briefcase" class="text-vorcus-gold w-5 h-5"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h4 class="text-white font-medium mb-1">Networking Events</h4>
+                                    <p class="text-sm text-gray-500">Virtual and in-person meetups for Elite members.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-4 mt-8">
+                                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="rounded-sm opacity-80 hover:opacity-100 transition-opacity">
+                                <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="rounded-sm opacity-80 hover:opacity-100 transition-opacity">
+                            </div>
+                            <div class="space-y-4">
+                                <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="rounded-sm opacity-80 hover:opacity-100 transition-opacity">
+                                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="rounded-sm opacity-80 hover:opacity-100 transition-opacity">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why VORCUS -->
+    <section class="py-24 bg-vorcus-black">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl md:text-5xl mb-4">Why VORCUS?</h2>
+                <div class="w-24 h-1 bg-vorcus-gold mx-auto"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                <div class="p-6">
+                    <div class="w-16 h-16 mx-auto bg-vorcus-dark rounded-full flex items-center justify-center mb-6 border border-vorcus-gold/20">
+                        <i data-lucide="book-open" class="w-8 h-8 text-vorcus-gold"></i>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Strategic Education</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Not just theory. We teach actionable strategies used by institutional desks.</p>
+                </div>
+                <div class="p-6">
+                    <div class="w-16 h-16 mx-auto bg-vorcus-dark rounded-full flex items-center justify-center mb-6 border border-vorcus-gold/20">
+                        <i data-lucide="activity" class="w-8 h-8 text-vorcus-gold"></i>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Market-Driven Insights</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Curriculum updated in real-time based on current macroeconomic conditions.</p>
+                </div>
+                <div class="p-6">
+                    <div class="w-16 h-16 mx-auto bg-vorcus-dark rounded-full flex items-center justify-center mb-6 border border-vorcus-gold/20">
+                        <i data-lucide="shield" class="w-8 h-8 text-vorcus-gold"></i>
+                    </div>
+                    <h3 class="font-serif text-xl mb-3">Elite Community</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Surround yourself with individuals serious about wealth generation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="py-32 bg-vorcus-dark relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-vorcus-black to-transparent"></div>
+        
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <h2 class="font-serif text-5xl md:text-6xl mb-8 leading-tight">Start Your Financial Journey<br><span class="text-gold-gradient">With VORCUS Capital</span></h2>
+            <p class="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">The markets wait for no one. Equip yourself with the knowledge to navigate them with confidence.</p>
+            
+            <form class="max-w-md mx-auto space-y-4" onsubmit="event.preventDefault(); alert('Thank you for your interest. Our team will contact you shortly.');">
+                <input type="email" placeholder="Enter your email address" class="w-full bg-vorcus-black border border-white/10 px-6 py-4 rounded-sm text-white placeholder-gray-600 focus:outline-none focus:border-vorcus-gold transition-colors">
+                <button type="submit" class="w-full bg-vorcus-gold text-vorcus-black font-bold py-4 rounded-sm hover:bg-white transition-colors uppercase tracking-widest">
+                    Request Access
+                </button>
+            </form>
+            <p class="text-xs text-gray-600 mt-6">No spam. Unsubscribe anytime.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-vorcus-black border-t border-white/10 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <span class="font-serif text-2xl tracking-widest text-white">VORCUS</span>
+                    <span class="font-serif text-xs tracking-[0.3em] text-vorcus-gold block -mt-1 mb-4">CAPITAL</span>
+                    <p class="text-gray-500 text-sm">Forging the next generation of disciplined investors.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-medium mb-4 uppercase tracking-wider text-sm">Platform</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#programs" class="hover:text-vorcus-gold transition-colors">Programs</a></li>
+                        <li><a href="#research" class="hover:text-vorcus-gold transition-colors">Research</a></li>
+                        <li><a href="#community" class="hover:text-vorcus-gold transition-colors">Community</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-medium mb-4 uppercase tracking-wider text-sm">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#about" class="hover:text-vorcus-gold transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-vorcus-gold transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-vorcus-gold transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-medium mb-4 uppercase tracking-wider text-sm">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-vorcus-gold transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-vorcus-gold transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/5 pt-8">
+                <p class="text-gray-600 text-xs text-center max-w-3xl mx-auto mb-4">
+                    <strong class="text-gray-400">Disclaimer:</strong> VORCUS Capital provides educational content only. We are not financial advisors, brokers, or dealers. All information provided is for educational purposes and should not be construed as investment advice. Investing involves risk, including the possible loss of principal. Past performance is not indicative of future results.
+                </p>
+                <p class="text-center text-gray-700 text-xs">&copy; 2024 VORCUS Capital. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        });
+
+        // Fade Up Animation for Elements
+        const fadeElements = document.querySelectorAll('.gsap-fade-right, .gsap-fade-left');
+        fadeElements.forEach(element => {
+            gsap.fromTo(element, 
+                { 
+                    opacity: 0, 
+                    x: element.classList.contains('gsap-fade-right') ? -50 : 50 
+                },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 80%",
+                    }
+                }
+            );
+        });
+
+        // Stagger Animation for Cards
+        gsap.from(".card-hover", {
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: "#programs",
+                start: "top 70%"
+            }
+        });
+
+        // Parallax Effect for Hero Charts
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            
+            const charts = document.querySelectorAll('.chart-line');
+            charts.forEach(chart => {
+                chart.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
